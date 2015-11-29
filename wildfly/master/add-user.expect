@@ -1,0 +1,19 @@
+#!/usr/bin/expect
+
+set timeout 5
+spawn /opt/wildfly-9.0.2.Final/bin/add-user.sh
+expect "(a):"
+send "a\n"
+expect "Username :"
+send "domainmgmt\n"
+expect "Password :"
+send "password@1234\n"
+expect "Re-enter Password :"
+send "password@1234\n"
+#expect "[  ]:"
+expect "What groups do you want this user to belong to?"
+send "\n"
+expect "Is this correct yes/no?"
+send "yes\n"
+expect "yes/no?"
+send "yes\n"

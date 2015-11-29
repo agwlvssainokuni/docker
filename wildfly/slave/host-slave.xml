@@ -9,7 +9,7 @@
         <security-realms>
             <security-realm name="ManagementRealm">
                 <server-identities>
-                    <secret value="cGFzc3dvcmQ="/>
+                    <secret value="cGFzc3dvcmRAMTIzNA=="/>
                 </server-identities>
                 <authentication>
                     <local default-user="$local" skip-group-loading="true"/>
