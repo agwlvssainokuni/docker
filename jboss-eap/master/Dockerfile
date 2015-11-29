@@ -19,4 +19,6 @@ RUN cp -p /opt/jboss-eap-6.4/domain/configuration/host-master.xml /opt/jboss-eap
 ADD setup.sh /
 RUN bash /setup.sh
 RUN rm -f /setup.sh
+
+EXPOSE 9999
 CMD /opt/jboss-eap-6.4/bin/domain.sh -b 0.0.0.0 -bmanagement 0.0.0.0
