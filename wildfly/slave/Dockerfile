@@ -16,4 +16,4 @@ ADD host-slave.xml /opt/wildfly-9.0.2.Final/domain/configuration/host.xml
 
 EXPOSE 8009
 EXPOSE 8080
-CMD /opt/wildfly-9.0.2.Final/bin/domain.sh -b 0.0.0.0 -bmanagement 0.0.0.0 -Djboss.domain.master.address=${MASTER_PORT_9999_TCP_ADDR}
+CMD /opt/wildfly-9.0.2.Final/bin/domain.sh -b 0.0.0.0 -bmanagement 0.0.0.0 -Djboss.domain.master.address=${MASTER_PORT_9999_TCP_ADDR} -Djboss.domain.master.port=${MASTER_PORT_9999_TCP_PORT}
