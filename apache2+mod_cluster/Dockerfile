@@ -30,4 +30,5 @@ ADD mod_cluster-manager.conf /etc/apache2/sites-available/
 RUN a2enmod mod_cluster
 RUN a2ensite mod_cluster-manager
 
-CMD service apache2 start && bash
+ADD init.sh /opt/
+CMD bash /opt/init.sh
