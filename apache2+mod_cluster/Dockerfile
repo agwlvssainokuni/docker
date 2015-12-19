@@ -26,7 +26,7 @@ RUN apt-get -y autoclean
 
 ADD mod_cluster.load /etc/apache2/mods-available/
 ADD mod_cluster.conf /etc/apache2/mods-available/
-ADD mod_cluster-manager.conf /etc/apache2/sites-available/
+#ADD mod_cluster-manager.conf /etc/apache2/sites-available/
 RUN a2enmod mod_cluster
 
 ADD init.sh /opt/
