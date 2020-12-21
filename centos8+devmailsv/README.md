@@ -30,10 +30,16 @@ CentOS 8 (centos:centos8) をベースとし「メールが外に出ていかな
 - メンテナンスを目的として、外部からSSHログインできるよう構成しておく。
 
 ## Docker操作
-### ビルド方法
+### ビルド
     docker build -t devmailsv -f Dockerfile .
 
-### 実行方法
-    docker run -d -P --privileged devmailsv
+### 起動
+    docker run -d --privileged -P --name=${name} devmailsv
+
+### 初期構成
+    docker exec ${name} timedatectl set-timezone Asia/Tokyo
+    docker exec ${name} mkdir /root/.ssh/
+    docker cp ${HOME}/.ssh/id_rsa.pub ${name}:/root/.ssh/authorized_keys
+    docker exec ${name} chmod -R go-rwx /root/.ssh/
 
 以上。
