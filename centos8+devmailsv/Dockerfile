@@ -34,19 +34,23 @@ RUN \
     && echo "# (0) BASE" >> /etc/postfix/main.cf \
     && echo "inet_interfaces = all" >> /etc/postfix/main.cf \
     && echo "home_mailbox = Maildir/" >> /etc/postfix/main.cf \
-    && echo "# (1) RELAY CONTROL" >> /etc/postfix/main.cf \
+    && echo "# (1) ALLOW RELAY" >> /etc/postfix/main.cf \
     && echo "mynetworks = 0.0.0.0/0" >> /etc/postfix/main.cf \
-    && echo "# (2) NEVER DELIVER" >> /etc/postfix/main.cf \
-    && echo "disable_dns_lookups = yes" >> /etc/postfix/main.cf \
+    && echo "# (2) FORCE LOCAL DELIVERY" >> /etc/postfix/main.cf \
     && echo "transport_maps = hash:/etc/postfix/transport" >> /etc/postfix/main.cf \
-    && echo "# (3) ENABLE TLS" >> /etc/postfix/main.cf \
+    && echo "# (3) DISCARD UNKNOWN RECIPIENT" >> /etc/postfix/main.cf \
+    && echo "fallback_transport = discard: UNKNOWN RECIPIENT" >> /etc/postfix/main.cf \
+    && echo "# (4) ENABLE TLS" >> /etc/postfix/main.cf \
     && echo "smtpd_use_tls = yes" >> /etc/postfix/main.cf \
-    && echo "# (4) ENABLE SMTP AUTH" >> /etc/postfix/main.cf \
+    && echo "# (5) ENABLE SMTP AUTH" >> /etc/postfix/main.cf \
     && echo "smtpd_sasl_auth_enable = yes" >> /etc/postfix/main.cf \
     && echo "smtpd_sasl_type = dovecot" >> /etc/postfix/main.cf \
     && echo "smtpd_sasl_path = private/auth" >> /etc/postfix/main.cf \
 # (2) /etc/postfix/transport
-    && echo -e "*\tlocal:" >> /etc/postfix/transport \
+    && echo >> /etc/postfix/transport \
+    && echo "########################################" >> /etc/postfix/transport \
+    && echo "# FORCE LOCAL DELIVERY" >> /etc/postfix/transport \
+    && echo -e "*\tlocal:\$myhostname" >> /etc/postfix/transport \
     && postmap /etc/postfix/transport \
 # (3) /etc/postfix/master.cf
     && sed -i_DIST \
@@ -71,7 +75,7 @@ RUN \
     && echo "  }" >> /etc/dovecot/conf.d/11-devmailsv.conf \
     && echo "}" >> /etc/dovecot/conf.d/11-devmailsv.conf
 
-COPY *.sh /root/
+COPY scripts/*.sh /root/
 
 EXPOSE 22 25 465 587 993 995
 
