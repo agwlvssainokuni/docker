@@ -34,7 +34,7 @@ CentOS 8 (centos:centos8) をベースとし「メールが外に出ていかな
     docker build -t devmailsv -f Dockerfile .
 
 ### 起動
-    docker run -d --privileged -P --name=${name} devmailsv
+    docker run -d --privileged -p 22:22 -p 25:25 -p 465:465 -p 587:587 -p 993:993 -p 995:995 --name=${name} devmailsv
 
 ### 初期構成
     docker exec ${name} timedatectl set-timezone Asia/Tokyo
