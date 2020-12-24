@@ -43,8 +43,8 @@ shift $((OPTIND - 1))
 do_main() {
     grep -v '^#' $1 | sed -e 's/[,:;]/ /g' | while read u p ignore; do
         if [[ $do_add == "true" ]]; then
-            useradd -s /sbin/nologin $u || exit -1
-            (echo $p | passwd $u --stdin) || exit -1
+            useradd -m -s /sbin/nologin $u || exit -1
+            (echo $u:$p | chpasswd) || exit -1
         elif [[ $do_del == "true" ]]; then
             userdel -r $u || exit -1
         fi

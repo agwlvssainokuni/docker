@@ -16,11 +16,31 @@
 
 FROM centos:centos8
 
-RUN dnf install -y rsyslog openssh-server postfix dovecot mailx passwd \
-    && systemctl enable rsyslog.service \
-    && systemctl enable sshd.service \
-    && systemctl enable postfix.service \
-    && systemctl enable dovecot.service
+RUN dnf install -y epel-release \
+    && dnf install -y supervisor rsyslog openssh-server postfix dovecot mailx passwd \
+    && systemctl disable supervisord.service \
+    && systemctl disable rsyslog.service \
+    && systemctl disable sshd.service \
+    && systemctl disable postfix.service \
+    && systemctl disable dovecot.service
+
+RUN /usr/libexec/openssh/sshd-keygen rsa \
+    && /usr/libexec/openssh/sshd-keygen ecdsa \
+    && /usr/libexec/openssh/sshd-keygen ed25519 \
+    && /usr/libexec/dovecot/mkcert.sh \
+    && sed -i_DIST \
+        -e 's/^\(nodaemon=\)/;; \1/' \
+        /etc/supervisord.conf \
+    && echo "[supervisord]" >> /etc/supervisord.d/00-base.ini \
+    && echo "nodaemon=true" >> /etc/supervisord.d/00-base.ini \
+    && echo "[program:rsyslogd]" >> /etc/supervisord.d/10-devmailsv.ini \
+    && echo "command=/usr/sbin/rsyslogd -n" >> /etc/supervisord.d/10-devmailsv.ini \
+    && echo "[program:sshd]" >> /etc/supervisord.d/10-devmailsv.ini \
+    && echo "command=/usr/sbin/sshd -D" >> /etc/supervisord.d/10-devmailsv.ini \
+    && echo "[program:postfix]" >> /etc/supervisord.d/10-devmailsv.ini \
+    && echo "command=/usr/sbin/postfix start-fg" >> /etc/supervisord.d/10-devmailsv.ini \
+    && echo "[program:dovecot]" >> /etc/supervisord.d/10-devmailsv.ini \
+    && echo "command=/usr/sbin/dovecot -F" >> /etc/supervisord.d/10-devmailsv.ini
 
 RUN \
 # [Postfix設定]
@@ -79,4 +99,4 @@ COPY scripts/*.sh /root/
 
 EXPOSE 22 25 465 587 993 995
 
-CMD ["/sbin/init", "-D"]
+CMD ["/usr/bin/supervisord"]
