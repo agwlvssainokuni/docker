@@ -17,18 +17,16 @@
 FROM centos:centos8
 
 RUN dnf install -y epel-release \
-    && dnf install -y supervisor rsyslog openssh-server postfix dovecot mailx passwd \
+    && dnf install -y \
+        supervisor rsyslog openssh-server \
+        postfix dovecot mailx passwd \
     && systemctl disable supervisord.service \
     && systemctl disable rsyslog.service \
     && systemctl disable sshd.service \
     && systemctl disable postfix.service \
     && systemctl disable dovecot.service
 
-RUN /usr/libexec/openssh/sshd-keygen rsa \
-    && /usr/libexec/openssh/sshd-keygen ecdsa \
-    && /usr/libexec/openssh/sshd-keygen ed25519 \
-    && /usr/libexec/dovecot/mkcert.sh \
-    && sed -i_DIST \
+RUN sed -i_DIST \
         -e 's/^\(nodaemon=\)/;; \1/' \
         /etc/supervisord.conf \
     && echo "[supervisord]" >> /etc/supervisord.d/00-base.ini \
@@ -95,8 +93,9 @@ RUN \
     && echo "  }" >> /etc/dovecot/conf.d/11-devmailsv.conf \
     && echo "}" >> /etc/dovecot/conf.d/11-devmailsv.conf
 
+COPY *.sh /
 COPY scripts/*.sh /root/
 
 EXPOSE 22 25 465 587 993 995
 
-CMD ["/usr/bin/supervisord"]
+CMD ["/startup.sh"]

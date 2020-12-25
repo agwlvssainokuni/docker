@@ -18,7 +18,7 @@ FROM ubuntu:20.04
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        tzdata supervisor rsyslog openssh-server \
+        supervisor rsyslog openssh-server \
         postfix dovecot-imapd dovecot-pop3d mailutils \
     && systemctl disable supervisor.service \
     && systemctl disable rsyslog.service \
@@ -26,7 +26,8 @@ RUN apt-get update \
     && systemctl disable postfix.service \
     && systemctl disable dovecot.service
 
-RUN mkdir /run/sshd \
+RUN mkdir /run/sshd && chmod 0755 /run/sshd \
+    && (cd /etc/ssh/ && rm ssh_host_*_key) \
     && echo "[supervisord]" >> /etc/supervisor/conf.d/00-base.conf \
     && echo "nodaemon=true" >> /etc/supervisor/conf.d/00-base.conf \
     && echo "[program:rsyslogd]" >> /etc/supervisor/conf.d/10-devmailsv.conf \
@@ -89,8 +90,9 @@ RUN \
     && echo "  }" >> /etc/dovecot/conf.d/11-devmailsv.conf \
     && echo "}" >> /etc/dovecot/conf.d/11-devmailsv.conf
 
+COPY *.sh /
 COPY scripts/*.sh /root/
 
 EXPOSE 22 25 465 587 993 995
 
-CMD ["/usr/bin/supervisord"]
+CMD ["/startup.sh"]
