@@ -2,8 +2,9 @@
 --------------------
 
 ## 概要
-CentOS 8 (centos:centos8) をベースとし「メールが外に出ていかない」
-ことを特徴とするメールサーバのコンテナイメージを作成する。
+CentOS 8 (centos:centos8) および Ubuntu 20.04 LTS (ubuntu:20.04)
+をベースとし「メールが外に出ていかない」ことを特徴とするメールサーバの
+コンテナイメージを作成する。
 
 メールの誤送信リスクを低減し、開発用に使用することを想定する。
 
@@ -34,10 +35,9 @@ CentOS 8 (centos:centos8) をベースとし「メールが外に出ていかな
     docker build -t devmailsv -f Dockerfile .
 
 ### 起動
-    docker run -d --privileged -p 22:22 -p 25:25 -p 465:465 -p 587:587 -p 993:993 -p 995:995 --name=${name} devmailsv
+    docker run -d -p 22:22 -p 25:25 -p 465:465 -p 587:587 -p 993:993 -p 995:995 --name=${name} devmailsv
 
 ### 初期構成
-    docker exec ${name} timedatectl set-timezone Asia/Tokyo
     docker exec ${name} mkdir /root/.ssh/
     docker cp ${HOME}/.ssh/id_rsa.pub ${name}:/root/.ssh/authorized_keys
     docker exec ${name} chmod -R go-rwx /root/.ssh/
