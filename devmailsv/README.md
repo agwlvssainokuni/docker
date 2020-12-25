@@ -32,10 +32,12 @@ CentOS 8 (centos:centos8) および Ubuntu 20.04 LTS (ubuntu:20.04)
 
 ## Docker操作
 ### ビルド
-    docker build -t devmailsv -f Dockerfile .
+    docker build -t devmailsv:centos8 centos8
+    docker build -t devmailsv:ubuntu2004 ubuntu2004
 
 ### 起動
-    docker run -d -p 22:22 -p 25:25 -p 465:465 -p 587:587 -p 993:993 -p 995:995 --name=${name} devmailsv
+    docker run -d -p 22:22 -p 25:25 -p 465:465 -p 587:587 -p 993:993 -p 995:995 --name=${name} devmailsv:centos8
+    docker run -d -p 22:22 -p 25:25 -p 465:465 -p 587:587 -p 993:993 -p 995:995 --name=${name} devmailsv:ubuntu2004
 
 ### 初期構成
     docker exec ${name} mkdir /root/.ssh/
