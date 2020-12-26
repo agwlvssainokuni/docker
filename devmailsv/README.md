@@ -42,6 +42,7 @@ CentOS 8 (centos:centos8) および Ubuntu 20.04 LTS (ubuntu:20.04)
 ### 初期構成
     docker exec ${name} mkdir /root/.ssh/
     docker cp ${HOME}/.ssh/id_rsa.pub ${name}:/root/.ssh/authorized_keys
+    docker exec ${name} chown -R root:root /root/.ssh/
     docker exec ${name} chmod -R go-rwx /root/.ssh/
 
 以上。
