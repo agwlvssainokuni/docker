@@ -1,5 +1,5 @@
 #
-#  Copyright 2020 agwlvssainokuni
+#  Copyright 2020,2021 agwlvssainokuni
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -27,8 +27,8 @@ RUN dnf install -y epel-release \
     && systemctl disable dovecot.service
 
 COPY *.sh /
-COPY scripts/*.sh /root/
+COPY scripts/*.sh /opt/
 
 EXPOSE 22 25 465 587 993 995
 
-CMD ["/startup.sh"]
+CMD ["/docker-entrypoint.sh"]

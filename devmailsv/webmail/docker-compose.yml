@@ -10,6 +10,8 @@ services:
   webmail:
     image: roundcube/roundcubemail
     container_name: webmail
+    depends_on:
+      - mailsv
     ports:
       - '80:80'
     environment:

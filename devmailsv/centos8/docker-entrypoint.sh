@@ -1,7 +1,7 @@
 #!/bin/bash
 # -*- coding: utf-8 -*-
 #
-#  Copyright 2020 agwlvssainokuni
+#  Copyright 2020,2021 agwlvssainokuni
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ ssh-keygen -A
 ########################################################################
 # (2) SERVER CERTIFICATE FOR POSTFIX AND DOVECOT
 if [[ ! (-f /devmailsv-cert.pem && -f /devmailsv-key.pem) ]]; then
-    (cd / && /root/createcert.sh)
+    (cd / && /opt/createcert.sh)
 fi
 
 ########################################################################
